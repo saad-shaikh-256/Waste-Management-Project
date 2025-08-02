@@ -4,6 +4,52 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// --- Data arrays for cleaner JSX ---
+const whyChooseUsItems = [
+  {
+    title: "Vetted Network:",
+    text: "Access thousands of verified and trusted recycling partners.",
+  },
+  {
+    title: "Data-Driven Insights:",
+    text: "Utilize our dashboard to track your environmental impact and earnings.",
+  },
+  {
+    title: "Seamless Transactions:",
+    text: "Enjoy a secure, fast, and transparent process from listing to payment.",
+  },
+];
+
+const featuresList = [
+  "Advanced Search & Filtering",
+  "Real-Time Messaging",
+  "Secure Transaction System",
+  "Impact Analytics Dashboard",
+  "Automated Pickup Scheduling",
+  "User Verification & Ratings",
+];
+
+const testimonials = [
+  {
+    quote:
+      "EcoConnect revolutionized our waste stream. We've increased our recycling rate by 40% and found new revenue sources.",
+    name: "John Doe",
+    title: "Facility Manager, TechCorp",
+  },
+  {
+    quote:
+      "As a recycler, finding consistent, quality materials was always a challenge. This platform is a game-changer for our supply chain.",
+    name: "Jane Smith",
+    title: "Owner, GreenCycle Recyclers",
+  },
+  {
+    quote:
+      "The transparency and tracking features are incredible. I can finally show concrete data on our company's sustainability efforts.",
+    name: "Samuel Green",
+    title: "Sustainability Officer, BuildWell",
+  },
+];
+
 // --- Icon Components ---
 const CheckCircleIcon = () => (
   <svg
@@ -149,44 +195,23 @@ const LandingPage = () => {
       {/* 2. Why Choose Us Section */}
       <section className="py-20 md:py-24">
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <img
-              src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=2670&auto=format&fit=crop"
-              alt="Team working for sustainability"
-              className="rounded-xl shadow-xl"
-            />
-          </div>
+          {/* ... image div ... */}
           <div>
             <h2 className="section-title">
               Why EcoConnect is Your Best Choice
             </h2>
             <p className="mt-4 text-gray-600">
-              We are more than a platform; we are a partner in sustainability.
-              Our technology, network, and dedication are unparalleled,
-              providing you with a seamless and impactful recycling experience.
+              We are more than a platform; we are a partner in sustainability...
             </p>
             <ul className="mt-8 space-y-4">
-              <li className="flex items-start">
-                <CheckCircleIcon />
-                <span className="ml-3">
-                  <b>Vetted Network:</b> Access thousands of verified and
-                  trusted recycling partners.
-                </span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircleIcon />
-                <span className="ml-3">
-                  <b>Data-Driven Insights:</b> Utilize our dashboard to track
-                  your environmental impact and earnings.
-                </span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircleIcon />
-                <span className="ml-3">
-                  <b>Seamless Transactions:</b> Enjoy a secure, fast, and
-                  transparent process from listing to payment.
-                </span>
-              </li>
+              {whyChooseUsItems.map((item, index) => (
+                <li key={index} className="flex items-start">
+                  <CheckCircleIcon />
+                  <span className="ml-3">
+                    <b>{item.title}</b> {item.text}
+                  </span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -294,19 +319,12 @@ const LandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="section-title">Platform Features</h2>
             <p className="section-subtitle">
-              Everything you need for efficient and effective waste management,
-              all in one place.
+              Everything you need for efficient and effective waste
+              management...
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              "Advanced Search & Filtering",
-              "Real-Time Messaging",
-              "Secure Transaction System",
-              "Impact Analytics Dashboard",
-              "Automated Pickup Scheduling",
-              "User Verification & Ratings",
-            ].map((feature, i) => (
+            {featuresList.map((feature, i) => (
               <div
                 key={i}
                 className="stagger-card bg-white p-6 rounded-lg shadow-md border border-gray-100"
@@ -382,31 +400,11 @@ const LandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="section-title">What Our Partners Say</h2>
             <p className="section-subtitle">
-              We're proud to have earned the trust of industry leaders and local
-              businesses alike.
+              We're proud to have earned the trust of industry leaders...
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                quote:
-                  "EcoConnect revolutionized our waste stream. We've increased our recycling rate by 40% and found new revenue sources.",
-                name: "John Doe",
-                title: "Facility Manager, TechCorp",
-              },
-              {
-                quote:
-                  "As a recycler, finding consistent, quality materials was always a challenge. This platform is a game-changer for our supply chain.",
-                name: "Jane Smith",
-                title: "Owner, GreenCycle Recyclers",
-              },
-              {
-                quote:
-                  "The transparency and tracking features are incredible. I can finally show concrete data on our company's sustainability efforts.",
-                name: "Samuel Green",
-                title: "Sustainability Officer, BuildWell",
-              },
-            ].map((fb, i) => (
+            {testimonials.map((fb, i) => (
               <div
                 key={i}
                 className="stagger-card bg-gray-50 p-8 rounded-xl shadow-md"
