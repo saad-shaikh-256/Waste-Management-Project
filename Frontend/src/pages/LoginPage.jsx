@@ -1,19 +1,26 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
-  const [userType, setUserType] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!userType) {
-      alert("Please select a user role.");
-      return;
+    setError("");
+
+    const result = await login(email, password);
+
+    if (result.success) {
+      navigate("/dashboard");
+    } else {
+      setError(result.message);
     }
-    // Login logic here
-    alert(`Simulating login for ${userType} with email ${email}`);
   };
 
   return (
@@ -70,35 +77,18 @@ const LoginPage = () => {
           </div>
         </div>
 
+        {/* Error Message Display */}
+        {error && (
+          <div className="text-center text-sm text-red-600 bg-red-100 p-3 rounded-lg">
+            {error}
+          </div>
+        )}
+
         <form
           className="mt-8 space-y-6 bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl"
           onSubmit={handleSubmit}
         >
           <div className="space-y-5">
-            {/* User Role Dropdown */}
-            <div className="space-y-1">
-              <label
-                htmlFor="user-type"
-                className="text-sm font-medium text-gray-700 pl-1"
-              >
-                I am a
-              </label>
-              <select
-                id="user-type"
-                required
-                value={userType}
-                onChange={(e) => setUserType(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent transition"
-              >
-                <option value="" disabled>
-                  Select your role...
-                </option>
-                <option value="waste-generator">Waste Generator</option>
-                <option value="waste-collector">Waste Collector</option>
-                <option value="ngo">NGO</option>
-              </select>
-            </div>
-
             {/* Email Input */}
             <div className="space-y-1">
               <label

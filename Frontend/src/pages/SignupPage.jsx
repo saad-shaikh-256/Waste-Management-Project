@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const SignupPage = () => {
+  const { signup } = useAuth();
+  const navigate = useNavigate();
+
   // State for all form fields
   const [userType, setUserType] = useState("");
   const [fullName, setFullName] = useState("");
@@ -11,7 +15,7 @@ const SignupPage = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Reset error on new submission
 
@@ -33,16 +37,16 @@ const SignupPage = () => {
       return;
     }
 
-    // If all checks pass, proceed with registration logic
-    console.log({
-      userType,
-      fullName,
-      email,
-      password,
-    });
+    // Call the async signup function from the context
+    const result = await signup(fullName, email, password, userType);
 
-    alert(`Simulating account creation for ${fullName} as a ${userType}!`);
-    // Here you would send the data to your backend API
+    if (result.success) {
+      // Redirect to the dashboard on successful signup
+      navigate("/dashboard");
+    } else {
+      // Display the error message from the backend
+      setError(result.message);
+    }
   };
 
   return (
