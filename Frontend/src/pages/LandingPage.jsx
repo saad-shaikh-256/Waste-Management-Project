@@ -439,48 +439,48 @@ const LandingPage = () => {
             <div className="grid gap-4">
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?recycling,factory&sig=10"
+                src="https://images.unsplash.com/photo-1661692110695-a31fdc2ee29a?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?waste,management&sig=11"
-                alt=""
-              />
-            </div>
-            <div className="grid gap-4">
-              <img
-                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?green,energy&sig=12"
-                alt=""
-              />
-              <img
-                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?sustainability,people&sig=13"
+                src="https://images.unsplash.com/photo-1574974671999-24b7dfbb0d53?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
             </div>
             <div className="grid gap-4">
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?plastic,bottles&sig=14"
+                src="https://images.unsplash.com/photo-1452179535021-368bb0edc3a8?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?metal,scrap&sig=15"
+                src="https://images.unsplash.com/photo-1643617526717-9a6d8716c1f7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
             </div>
             <div className="grid gap-4">
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?community,environment&sig=16"
+                src="https://images.unsplash.com/photo-1591193686104-fddba4d0e4d8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?solar,panel,recycling&sig=17"
+                src="https://images.unsplash.com/photo-1707879447469-60e84418d027?q=80&w=1129&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt=""
+              />
+            </div>
+            <div className="grid gap-4">
+              <img
+                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
+                src="https://images.unsplash.com/photo-1722942468644-0672d2901b6f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt=""
+              />
+              <img
+                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
+                src="https://images.unsplash.com/photo-1440940627368-bd68a386bb73?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
             </div>
@@ -524,20 +524,19 @@ const LandingPage = () => {
             </form>
             <div>
               <img
-                src="https://source.unsplash.com/random/800x600?map,city&sig=20"
+                src="https://images.unsplash.com/photo-1520299607509-dcd935f9a839?q=80&w=1331&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Map"
                 className="rounded-lg shadow-lg w-full h-64 object-cover"
               />
               <div className="mt-8 text-gray-600 space-y-4">
                 <p>
-                  <strong>Address:</strong> 123 Green Way, Sustainability City,
-                  12345
+                  <strong>Address:</strong> Ahmedabad, Gujarat, 123456
                 </p>
                 <p>
                   <strong>Email:</strong> contact@ecoconnect.com
                 </p>
                 <p>
-                  <strong>Phone:</strong> (123) 456-7890
+                  <strong>Phone:</strong> (91) 12345-67890
                 </p>
               </div>
             </div>
