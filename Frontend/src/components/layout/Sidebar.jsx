@@ -218,7 +218,7 @@ const Sidebar = () => {
           />
           <div>
             <p className="font-semibold text-gray-800">Taleb Shaikh</p>
-            <Link to="/logout" className="text-xs text-red-500 hover:underline">
+            <Link to="/" className="text-xs text-red-500 hover:underline">
               Logout
             </Link>
           </div>
