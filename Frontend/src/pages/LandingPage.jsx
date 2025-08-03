@@ -4,6 +4,52 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// --- Data arrays for cleaner JSX ---
+const whyChooseUsItems = [
+  {
+    title: "Vetted Network:",
+    text: "Access thousands of verified and trusted recycling partners.",
+  },
+  {
+    title: "Data-Driven Insights:",
+    text: "Utilize our dashboard to track your environmental impact and earnings.",
+  },
+  {
+    title: "Seamless Transactions:",
+    text: "Enjoy a secure, fast, and transparent process from listing to payment.",
+  },
+];
+
+const featuresList = [
+  "Advanced Search & Filtering",
+  "Real-Time Messaging",
+  "Secure Transaction System",
+  "Impact Analytics Dashboard",
+  "Automated Pickup Scheduling",
+  "User Verification & Ratings",
+];
+
+const testimonials = [
+  {
+    quote:
+      "EcoConnect revolutionized our waste stream. We've increased our recycling rate by 40% and found new revenue sources.",
+    name: "John Doe",
+    title: "Facility Manager, TechCorp",
+  },
+  {
+    quote:
+      "As a recycler, finding consistent, quality materials was always a challenge. This platform is a game-changer for our supply chain.",
+    name: "Jane Smith",
+    title: "Owner, GreenCycle Recyclers",
+  },
+  {
+    quote:
+      "The transparency and tracking features are incredible. I can finally show concrete data on our company's sustainability efforts.",
+    name: "Samuel Green",
+    title: "Sustainability Officer, BuildWell",
+  },
+];
+
 // --- Icon Components ---
 const CheckCircleIcon = () => (
   <svg
@@ -149,44 +195,23 @@ const LandingPage = () => {
       {/* 2. Why Choose Us Section */}
       <section className="py-20 md:py-24">
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <img
-              src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=2670&auto=format&fit=crop"
-              alt="Team working for sustainability"
-              className="rounded-xl shadow-xl"
-            />
-          </div>
+          {/* ... image div ... */}
           <div>
             <h2 className="section-title">
               Why EcoConnect is Your Best Choice
             </h2>
             <p className="mt-4 text-gray-600">
-              We are more than a platform; we are a partner in sustainability.
-              Our technology, network, and dedication are unparalleled,
-              providing you with a seamless and impactful recycling experience.
+              We are more than a platform; we are a partner in sustainability...
             </p>
             <ul className="mt-8 space-y-4">
-              <li className="flex items-start">
-                <CheckCircleIcon />
-                <span className="ml-3">
-                  <b>Vetted Network:</b> Access thousands of verified and
-                  trusted recycling partners.
-                </span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircleIcon />
-                <span className="ml-3">
-                  <b>Data-Driven Insights:</b> Utilize our dashboard to track
-                  your environmental impact and earnings.
-                </span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircleIcon />
-                <span className="ml-3">
-                  <b>Seamless Transactions:</b> Enjoy a secure, fast, and
-                  transparent process from listing to payment.
-                </span>
-              </li>
+              {whyChooseUsItems.map((item, index) => (
+                <li key={index} className="flex items-start">
+                  <CheckCircleIcon />
+                  <span className="ml-3">
+                    <b>{item.title}</b> {item.text}
+                  </span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -294,19 +319,12 @@ const LandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="section-title">Platform Features</h2>
             <p className="section-subtitle">
-              Everything you need for efficient and effective waste management,
-              all in one place.
+              Everything you need for efficient and effective waste
+              management...
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              "Advanced Search & Filtering",
-              "Real-Time Messaging",
-              "Secure Transaction System",
-              "Impact Analytics Dashboard",
-              "Automated Pickup Scheduling",
-              "User Verification & Ratings",
-            ].map((feature, i) => (
+            {featuresList.map((feature, i) => (
               <div
                 key={i}
                 className="stagger-card bg-white p-6 rounded-lg shadow-md border border-gray-100"
@@ -382,31 +400,11 @@ const LandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="section-title">What Our Partners Say</h2>
             <p className="section-subtitle">
-              We're proud to have earned the trust of industry leaders and local
-              businesses alike.
+              We're proud to have earned the trust of industry leaders...
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                quote:
-                  "EcoConnect revolutionized our waste stream. We've increased our recycling rate by 40% and found new revenue sources.",
-                name: "John Doe",
-                title: "Facility Manager, TechCorp",
-              },
-              {
-                quote:
-                  "As a recycler, finding consistent, quality materials was always a challenge. This platform is a game-changer for our supply chain.",
-                name: "Jane Smith",
-                title: "Owner, GreenCycle Recyclers",
-              },
-              {
-                quote:
-                  "The transparency and tracking features are incredible. I can finally show concrete data on our company's sustainability efforts.",
-                name: "Samuel Green",
-                title: "Sustainability Officer, BuildWell",
-              },
-            ].map((fb, i) => (
+            {testimonials.map((fb, i) => (
               <div
                 key={i}
                 className="stagger-card bg-gray-50 p-8 rounded-xl shadow-md"
@@ -441,48 +439,48 @@ const LandingPage = () => {
             <div className="grid gap-4">
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?recycling,factory&sig=10"
+                src="https://images.unsplash.com/photo-1661692110695-a31fdc2ee29a?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?waste,management&sig=11"
-                alt=""
-              />
-            </div>
-            <div className="grid gap-4">
-              <img
-                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?green,energy&sig=12"
-                alt=""
-              />
-              <img
-                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?sustainability,people&sig=13"
+                src="https://images.unsplash.com/photo-1574974671999-24b7dfbb0d53?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
             </div>
             <div className="grid gap-4">
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?plastic,bottles&sig=14"
+                src="https://images.unsplash.com/photo-1452179535021-368bb0edc3a8?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?metal,scrap&sig=15"
+                src="https://images.unsplash.com/photo-1643617526717-9a6d8716c1f7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
             </div>
             <div className="grid gap-4">
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x1200?community,environment&sig=16"
+                src="https://images.unsplash.com/photo-1591193686104-fddba4d0e4d8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
               <img
                 className="gallery-image h-auto max-w-full rounded-lg shadow-md"
-                src="https://source.unsplash.com/random/800x600?solar,panel,recycling&sig=17"
+                src="https://images.unsplash.com/photo-1707879447469-60e84418d027?q=80&w=1129&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt=""
+              />
+            </div>
+            <div className="grid gap-4">
+              <img
+                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
+                src="https://images.unsplash.com/photo-1722942468644-0672d2901b6f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt=""
+              />
+              <img
+                className="gallery-image h-auto max-w-full rounded-lg shadow-md"
+                src="https://images.unsplash.com/photo-1440940627368-bd68a386bb73?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
             </div>
@@ -526,20 +524,19 @@ const LandingPage = () => {
             </form>
             <div>
               <img
-                src="https://source.unsplash.com/random/800x600?map,city&sig=20"
+                src="https://images.unsplash.com/photo-1520299607509-dcd935f9a839?q=80&w=1331&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Map"
                 className="rounded-lg shadow-lg w-full h-64 object-cover"
               />
               <div className="mt-8 text-gray-600 space-y-4">
                 <p>
-                  <strong>Address:</strong> 123 Green Way, Sustainability City,
-                  12345
+                  <strong>Address:</strong> Ahmedabad, Gujarat, 123456
                 </p>
                 <p>
                   <strong>Email:</strong> contact@ecoconnect.com
                 </p>
                 <p>
-                  <strong>Phone:</strong> (123) 456-7890
+                  <strong>Phone:</strong> (91) 12345-67890
                 </p>
               </div>
             </div>
