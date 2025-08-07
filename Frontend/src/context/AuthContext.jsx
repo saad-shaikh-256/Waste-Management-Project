@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 
 // Define the base URL for your backend API
-const API_URL = "http://localhost:5001/api/users/";
+const API_URL = "https://eco-connect-backend.onrender.com/api/users/"; // <-- YOUR RENDER URL
 
 const AuthContext = createContext(null);
 

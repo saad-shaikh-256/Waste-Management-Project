@@ -50,6 +50,33 @@ const testimonials = [
   },
 ];
 
+const howItWorksSteps = [
+  {
+    title: "Create Your Profile",
+    desc: "Sign up in minutes as a waste generator or a recycler. It's free, simple, and secure.",
+    align: "left",
+    img: "https://images.unsplash.com/photo-1598962135016-458cd4e361e6?q=80&w=1166&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    title: "Post or Discover",
+    desc: "Generators can list their scrap materials with photos and details. Recyclers can browse and filter listings to find exactly what they need.",
+    align: "right",
+    img: "https://images.unsplash.com/photo-1588511986632-592db3d6c81f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    title: "Connect & Schedule",
+    desc: "Use our real-time messaging to communicate, negotiate, and schedule a convenient pickup or delivery time.",
+    align: "left",
+    img: "https://images.unsplash.com/photo-1670795635018-d774a2b9e07d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    title: "Transact & Track",
+    desc: "Complete the exchange through our secure system. Get paid and watch your positive environmental impact grow on your personal dashboard.",
+    align: "right",
+    img: "https://plus.unsplash.com/premium_photo-1681748777410-8439a0b41b22?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+];
+
 // --- Icon Components ---
 const CheckCircleIcon = () => (
   <svg
@@ -195,7 +222,16 @@ const LandingPage = () => {
       {/* 2. Why Choose Us Section */}
       <section className="py-20 md:py-24">
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-          {/* ... image div ... */}
+          {/* --- THIS IS THE UPDATED IMAGE DIV --- */}
+          <div>
+            <img
+              src="https://images.unsplash.com/photo-1542023250582-d7cbd0bd774f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Hands holding a plant growing from recycled materials"
+              className="rounded-xl shadow-xl"
+            />
+          </div>
+          {/* --- END OF UPDATED DIV --- */}
+
           <div>
             <h2 className="section-title">
               Why EcoConnect is Your Best Choice
@@ -260,45 +296,24 @@ const LandingPage = () => {
             </p>
           </div>
           <div className="relative">
-            <div className="hidden md:block absolute top-12 left-1/2 w-0.5 h-[calc(100%-6rem)] bg-green-200"></div>
-            <div className="space-y-16">
-              {[
-                {
-                  title: "Create Your Profile",
-                  desc: "Sign up in minutes as a waste generator or a recycler. It’s free, simple, and secure.",
-                  align: "left",
-                },
-                {
-                  title: "Post or Discover",
-                  desc: "Generators can list their scrap materials with photos and details. Recyclers can browse and filter listings to find exactly what they need.",
-                  align: "right",
-                },
-                {
-                  title: "Connect & Schedule",
-                  desc: "Use our real-time messaging to communicate, negotiate, and schedule a convenient pickup or delivery time.",
-                  align: "left",
-                },
-                {
-                  title: "Transact & Track",
-                  desc: "Complete the exchange through our secure system. Get paid and watch your positive environmental impact grow on your personal dashboard.",
-                  align: "right",
-                },
-              ].map((step, index) => (
+            <div className="hidden md:block absolute top-12 left-1/2 w-0.5 h-[calc(100%-6rem)] bg-green-200 -translate-x-1/2"></div>
+            <div className="space-y-16 md:space-y-24">
+              {howItWorksSteps.map((step, index) => (
                 <div
                   key={index}
-                  className={`md:flex items-center w-full ${
+                  className={`md:flex items-center w-full gap-8 ${
                     step.align === "left" ? "md:flex-row-reverse" : ""
                   }`}
                 >
                   <div className="md:w-5/12">
                     <img
-                      src={` https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2`}
+                      src={step.img} // <-- Use the unique image URL from the data array
                       className="rounded-xl shadow-lg"
                       alt={step.title}
                     />
                   </div>
                   <div className="relative md:w-2/12 flex justify-center">
-                    <div className="bg-green-500 text-white rounded-full h-24 w-24 flex items-center justify-center font-bold text-4xl z-10">
+                    <div className="bg-green-500 text-white rounded-full h-24 w-24 flex items-center justify-center font-bold text-4xl z-10 shadow-lg">
                       {index + 1}
                     </div>
                   </div>
@@ -352,17 +367,17 @@ const LandingPage = () => {
               {
                 title: "The Ultimate Guide to Sorting Recyclables",
                 category: "Sustainability",
-                img: "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?q=80&w=800",
+                img: "https://images.unsplash.com/photo-1540980193882-9fc6e90e29c8?q=80&w=1167&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
               },
               {
                 title: "Why E-Waste Recycling is More Important Than Ever",
                 category: "E-Waste",
-                img: "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?q=80&w=800",
+                img: "https://images.unsplash.com/photo-1526951521990-620dc14c214b?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
               },
               {
                 title: "EcoConnect Partner Spotlight: GreenCycle Inc.",
                 category: "Community",
-                img: "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?q=80&w=800",
+                img: "https://images.unsplash.com/photo-1617817546276-80b86dd60151?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
               },
             ].map((post, i) => (
               <div
@@ -536,7 +551,7 @@ const LandingPage = () => {
                   <strong>Email:</strong> contact@ecoconnect.com
                 </p>
                 <p>
-                  <strong>Phone:</strong> (91) 12345-67890
+                  <strong>Phone:</strong> (+91) 12345-67890
                 </p>
               </div>
             </div>
