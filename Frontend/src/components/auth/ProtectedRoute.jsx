@@ -1,17 +1,25 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  // For now, we are faking the authentication status.
-  // In the future, this will check for a token in localStorage or a cookie.
-  const isAuthenticated = true;
+
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="text-lg font-medium text-gray-600">
+          Loading Application...
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
-    // If not authenticated, redirect to the login page
     return <Navigate to="/login" replace />;
   }
 
-  // If authenticated, render the child components (e.g., DashboardLayout)
   return children;
 };
 
