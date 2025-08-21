@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext"; // 1. Import the useAuth hook
 
 const Header = () => {
+  const { isAuthenticated, user } = useAuth(); // 2. Get the authentication status and user info
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
@@ -10,6 +12,21 @@ const Header = () => {
     { href: "/#blog", label: "Blog" },
     { href: "/#contact", label: "Contact" },
   ];
+
+  // Helper to determine the correct dashboard path based on role
+  const getDashboardPath = () => {
+    if (!user) return "/dashboard";
+    switch (user.role) {
+      case "waste-generator":
+        return "/dashboard/generator/overview";
+      case "waste-collector":
+        return "/dashboard/collector/browse";
+      case "admin":
+        return "/dashboard/admin/overview";
+      default:
+        return "/dashboard";
+    }
+  };
 
   return (
     <header className="bg-white/90 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-gray-100">
@@ -41,39 +58,39 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-3">
-          <Link
-            to="/login"
-            className="hidden md:inline-block bg-transparent text-green-600 font-semibold px-5 py-1.5 rounded-full border-2 border-green-500 hover:bg-green-50 transition-all duration-300"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="hidden md:inline-block bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-5 py-1.5 rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
-          >
-            Join Now
-          </Link>
+          {/* --- DYNAMIC BUTTONS --- */}
+          {isAuthenticated ? (
+            // 3. If the user IS logged in, show the "Go to Dashboard" button
+            <Link
+              to={getDashboardPath()}
+              className="hidden md:inline-block bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-5 py-1.5 rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            // 4. If the user is NOT logged in, show the "Login" and "Join Now" buttons
+            <>
+              <Link
+                to="/login"
+                className="hidden md:inline-block bg-transparent text-green-600 font-semibold px-5 py-1.5 rounded-full border-2 border-green-500 hover:bg-green-50 transition-all duration-300"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="hidden md:inline-block bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-5 py-1.5 rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+              >
+                Join Now
+              </Link>
+            </>
+          )}
+
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
             aria-label="Toggle menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-700"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={
-                  isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"
-                }
-              />
-            </svg>
+            {/* ... SVG icon ... */}
           </button>
         </div>
       </div>
@@ -96,20 +113,33 @@ const Header = () => {
             </a>
           ))}
           <div className="flex space-x-3 pt-2">
-            <Link
-              to="/login"
-              className="flex-1 text-center bg-gray-100 text-green-600 font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-200 transition"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="flex-1 text-center bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-4 py-2.5 rounded-lg hover:shadow-md transition"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Join
-            </Link>
+            {/* --- DYNAMIC MOBILE BUTTONS --- */}
+            {isAuthenticated ? (
+              <Link
+                to={getDashboardPath()}
+                className="flex-1 text-center bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-4 py-2.5 rounded-lg hover:shadow-md transition"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="flex-1 text-center bg-gray-100 text-green-600 font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-200 transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="flex-1 text-center bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-4 py-2.5 rounded-lg hover:shadow-md transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Join
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
