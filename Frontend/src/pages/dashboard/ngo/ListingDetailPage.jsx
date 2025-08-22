@@ -75,7 +75,7 @@ const ListingDetailPage = () => {
   return (
     <div>
       <Link
-        to="/dashboard/ngo/overview"
+        to="/dashboard/ngo/auctions"
         className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 font-semibold transition-colors mb-6"
       >
         <BackArrowIcon />
