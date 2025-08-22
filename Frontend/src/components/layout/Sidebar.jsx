@@ -259,6 +259,16 @@ const Sidebar = () => {
                   <UserIcon /> Community Members
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to="/dashboard/ngo/auctions"
+                  className={({ isActive }) =>
+                    `${linkStyle} ${isActive ? activeLinkStyle : ""}`
+                  }
+                >
+                  <BrowseIcon /> Browse Auctions
+                </NavLink>
+              </li>
             </ul>
           </div>
         )}

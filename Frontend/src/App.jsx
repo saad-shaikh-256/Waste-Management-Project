@@ -20,8 +20,12 @@ import MyListings from "@/pages/dashboard/generator/MyListings";
 import BrowseListings from "@/pages/dashboard/collector/BrowseListings";
 import AdminOverview from "@/pages/dashboard/admin/AdminOverview";
 import UserManagement from "@/pages/dashboard/admin/UserManagement";
+
+// --- CORRECTED NGO IMPORTS ---
 import NgoOverview from "@/pages/dashboard/ngo/NgoOverview";
 import CommunityMembers from "@/pages/dashboard/ngo/CommunityMembers";
+import NgoAuctions from "@/pages/dashboard/ngo/NgoAuctions";
+import ListingDetailPage from "@/pages/dashboard/ngo/ListingDetailPage"; // Update the import path
 
 function App() {
   return (
@@ -66,6 +70,8 @@ function App() {
         {/* NGO Routes */}
         <Route path="ngo/overview" element={<NgoOverview />} />
         <Route path="ngo/members" element={<CommunityMembers />} />
+        <Route path="ngo/auctions" element={<NgoAuctions />} />
+        <Route path="ngo/listings/:id" element={<ListingDetailPage />} />
       </Route>
 
       {/* --- 404 Not Found Route --- */}

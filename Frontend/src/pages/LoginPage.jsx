@@ -176,7 +176,6 @@ const LoginPage = () => {
 
       {/* Right Pane - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
-
         <div className="absolute top-8 left-8">
           <Link
             to="/"
