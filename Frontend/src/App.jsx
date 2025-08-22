@@ -20,6 +20,8 @@ import MyListings from "@/pages/dashboard/generator/MyListings";
 import BrowseListings from "@/pages/dashboard/collector/BrowseListings";
 import AdminOverview from "@/pages/dashboard/admin/AdminOverview";
 import UserManagement from "@/pages/dashboard/admin/UserManagement";
+import NgoOverview from "@/pages/dashboard/ngo/NgoOverview";
+import CommunityMembers from "@/pages/dashboard/ngo/CommunityMembers";
 
 function App() {
   return (
@@ -60,6 +62,10 @@ function App() {
         {/* Admin Routes */}
         <Route path="admin/overview" element={<AdminOverview />} />
         <Route path="admin/users" element={<UserManagement />} />
+
+        {/* NGO Routes */}
+        <Route path="ngo/overview" element={<NgoOverview />} />
+        <Route path="ngo/members" element={<CommunityMembers />} />
       </Route>
 
       {/* --- 404 Not Found Route --- */}

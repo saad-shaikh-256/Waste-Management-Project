@@ -91,6 +91,23 @@ const EyeOffIcon = () => (
   </svg>
 );
 
+const BackArrowIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+    />
+  </svg>
+);
+
 const SignupPage = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -164,15 +181,15 @@ const SignupPage = () => {
   ];
 
   return (
-    <div ref={mainRef} className="min-h-screen flex bg-slate-50">
+    <div ref={mainRef} className="h-screen flex bg-slate-50">
       {/* Left Pane - Visual */}
       <div className="signup-image hidden lg:block w-1/2 relative">
         <img
-          src="https://images.unsplash.com/photo-1542601906-823816a7695a?q=80&w=2787&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1585871746932-e133d3fedf4d?q=80&w=770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Community working together for a green planet"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-green-900 bg-opacity-70 flex flex-col justify-end p-12">
+        <div className="absolute inset-0 bg-opacity-70 flex flex-col justify-end p-12">
           <h1 className="text-white text-4xl font-bold leading-tight">
             Join a Movement to Reshape Our Planet.
           </h1>
@@ -183,14 +200,24 @@ const SignupPage = () => {
       </div>
 
       {/* Right Pane - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+        <div className="absolute top-8 left-8">
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-gray-500 hover:text-gray-800 font-semibold transition-colors"
+          >
+            <BackArrowIcon />
+            <span>Home</span>
+          </Link>
+        </div>
+
         <div className="max-w-md w-full space-y-6 form-container">
           <div className="text-center">
             <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900">
               Create Your Account
             </h2>
             <p className="mt-2 text-gray-600">
-              It’s free and only takes a minute.
+              It's free and only takes a minute.
             </p>
           </div>
 
@@ -206,7 +233,7 @@ const SignupPage = () => {
                     type="button"
                     key={role.value}
                     onClick={() => setUserType(role.value)}
-                    className={`px-3 py-2 text-sm font-semibold rounded-lg border transition-all ${
+                    className={`px-3 py-2 text-sm font-semibold rounded-lg border transition-all cursor-pointer ${
                       userType === role.value
                         ? "bg-green-600 text-white border-green-600 shadow-md"
                         : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
@@ -292,7 +319,7 @@ const SignupPage = () => {
               >
                 {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
               </button>
-</div>
+            </div>
 
             {/* Terms and Error Display */}
             <div className="space-y-4">
@@ -328,7 +355,7 @@ const SignupPage = () => {
             <button
               type="submit"
               disabled={!termsAccepted}
-              className="w-full py-3 bg-green-600 text-white font-bold rounded-lg shadow-md hover:bg-green-700 transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-green-600 text-white font-bold rounded-lg shadow-md hover:bg-green-700 transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               Create Account
             </button>
