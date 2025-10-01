@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js"; // Assumes userRoutes.js uses "export default"
+import wasteListingRoutes from "./routes/wasteListingRoutes.js"; // 1. Import new routes
 
 dotenv.config();
 connectDB();
@@ -44,6 +45,7 @@ app.get("/api/ping", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+app.use("/api/listings", wasteListingRoutes); // 2. Add new routes
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

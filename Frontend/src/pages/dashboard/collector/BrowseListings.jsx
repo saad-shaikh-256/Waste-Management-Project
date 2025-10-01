@@ -1,29 +1,55 @@
-import React, { useState, useMemo } from "react";
-
-// Reuse your existing components and data!
-import { mockWasteListings } from "@/data/mockData";
+import React, { useState, useEffect, useMemo } from "react";
+import { getListings } from "@/api/listingService"; // Import the real API function
 import WasteListingCard from "@/components/dashboard/WasteListingCard";
 
 const BrowseListings = () => {
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [wasteTypeFilter, setWasteTypeFilter] = useState("all");
 
-  // useMemo will re-calculate the filtered list only when the dependencies change
+  // Fetch data from the backend when the component first loads
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        setLoading(true);
+        const data = await getListings();
+        setListings(data);
+      } catch (error) {
+        console.error("Failed to fetch listings:", error);
+        // Optionally set an error state here to show a message to the user
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchListings();
+  }, []); // The empty array ensures this effect runs only once
+
+  // The filtering logic now works on the live data held in the 'listings' state
   const filteredListings = useMemo(() => {
-    return mockWasteListings.filter((listing) => {
-      // Check if the search term matches location or provider name (case-insensitive)
+    return listings.filter((listing) => {
       const matchesSearchTerm =
         listing.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        listing.postedBy.toLowerCase().includes(searchTerm.toLowerCase());
+        (listing.user &&
+          listing.user.fullName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()));
 
-      // Check if the waste type filter matches (or if it's set to 'all')
       const matchesWasteType =
         wasteTypeFilter === "all" ||
-        listing.type.toLowerCase() === wasteTypeFilter;
+        listing.wasteType.toLowerCase() === wasteTypeFilter;
 
       return matchesSearchTerm && matchesWasteType;
     });
-  }, [searchTerm, wasteTypeFilter]); // Dependencies: re-run only when these change
+  }, [listings, searchTerm, wasteTypeFilter]);
+
+  // Show a loading indicator while fetching data
+  if (loading) {
+    return (
+      <div className="text-center p-10">Loading available listings...</div>
+    );
+  }
 
   return (
     <div>
@@ -31,30 +57,19 @@ const BrowseListings = () => {
         Browse Available Listings
       </h1>
 
-      {/* Filter and Search Controls */}
+      {/* Filter and Search Controls (No changes needed here) */}
       <div className="bg-white p-4 rounded-lg shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-center">
-        {/* Search by Location/Provider */}
         <div className="flex-grow w-full">
-          <label htmlFor="search" className="sr-only">
-            Search
-          </label>
           <input
             type="text"
-            id="search"
             placeholder="Search by location or provider..."
             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-
-        {/* Filter by Waste Type */}
         <div className="w-full md:w-auto">
-          <label htmlFor="waste-type-filter" className="sr-only">
-            Filter by Type
-          </label>
           <select
-            id="waste-type-filter"
             className="w-full md:w-auto px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400"
             value={wasteTypeFilter}
             onChange={(e) => setWasteTypeFilter(e.target.value)}
@@ -68,11 +83,11 @@ const BrowseListings = () => {
         </div>
       </div>
 
-      {/* Listings Grid */}
+      {/* Listings Grid - Renders based on the filtered live data */}
       {filteredListings.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredListings.map((listing) => (
-            <WasteListingCard key={listing.id} listing={listing} />
+            <WasteListingCard key={listing._id} listing={listing} />
           ))}
         </div>
       ) : (
