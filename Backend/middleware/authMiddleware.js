@@ -9,17 +9,10 @@ const protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      // Get token from header (e.g., "Bearer <token>")
       token = req.headers.authorization.split(" ")[1];
-
-      // Verify the token using the secret
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // Get user from the token's ID and attach it to the request object
-      // We exclude the password from the user object
       req.user = await User.findById(decoded.id).select("-password");
-
-      next(); // Move on to the next step (the controller function)
+      next();
     } catch (error) {
       console.error(error);
       res.status(401).json({ message: "Not authorized, token failed" });
@@ -31,4 +24,13 @@ const protect = async (req, res, next) => {
   }
 };
 
-export { protect };
+// --- NEW MIDDLEWARE ---
+const admin = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(401).json({ message: "Not authorized as an admin" });
+  }
+};
+
+export { protect, admin };

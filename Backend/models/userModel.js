@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true, // Each email must be unique
+      unique: true,
     },
     password: {
       type: String,
@@ -18,11 +18,28 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["waste-generator", "waste-collector", "ngo", "admin"], // Only allow these values
+      enum: ["waste-generator", "waste-collector", "ngo", "admin"],
+    },
+    status: {
+      type: String,
+      enum: ["Pending", "Verified", "Suspended"],
+      default: "Pending",
+    },
+    // --- NEW FIELDS ---
+    phone: {
+      type: String,
+      default: "",
+    },
+    address: {
+      type: String,
+      default: "",
+    },
+    dateOfBirth: {
+      type: Date,
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 

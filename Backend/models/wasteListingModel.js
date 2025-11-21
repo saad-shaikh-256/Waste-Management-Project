@@ -9,38 +9,28 @@ const bidSchema = new mongoose.Schema({
 const wasteListingSchema = new mongoose.Schema(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId, // Reference to the User model
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "User", // Establishes the relationship
+      ref: "User", // The Seller (Generator)
     },
-    wasteType: {
-      type: String,
-      required: true,
+    // --- NEW FIELD ---
+    collectedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // The Buyer (Collector/NGO)
     },
-    quantity: {
-      type: String,
-      required: true,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
-    pickupDate: {
-      type: Date,
-    },
-    description: {
-      type: String,
-    },
-    image: {
-      type: String, // URL to the uploaded image
-    },
+    wasteType: { type: String, required: true },
+    quantity: { type: String, required: true },
+    location: { type: String, required: true },
+    pickupDate: { type: Date },
+    description: { type: String },
+    image: { type: String },
     status: {
       type: String,
       required: true,
       enum: ["Available", "Claimed", "Completed"],
       default: "Available",
     },
-    bids: [bidSchema], // An array of bids
+    bids: [bidSchema],
   },
   {
     timestamps: true,

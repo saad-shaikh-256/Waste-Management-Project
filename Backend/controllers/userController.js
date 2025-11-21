@@ -2,31 +2,24 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Helper function to generate a token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
 
-// @desc    Register a new user
-// @route   POST /api/users/register
-// @access  Public
 const registerUser = async (req, res) => {
   const { fullName, email, password, role } = req.body;
 
   try {
-    // 1. Check if user already exists in the database
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // 2. Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 3. Create the new user in the database
     const user = await User.create({
       fullName,
       email,
@@ -34,13 +27,13 @@ const registerUser = async (req, res) => {
       role,
     });
 
-    // 4. If user was created successfully, send back user data and a token
     if (user) {
       res.status(201).json({
         _id: user._id,
         name: user.fullName,
         email: user.email,
         role: user.role,
+        status: user.status,
         token: generateToken(user._id),
       });
     } else {
@@ -55,21 +48,28 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // 1. Check if a user with the given email exists in the database
     const user = await User.findOne({ email });
 
-    // 2. If user exists, compare the provided password with the hashed password in the DB
     if (user && (await bcrypt.compare(password, user.password))) {
-      // Passwords match! Send back user data and a new token.
+      if (user.status === "Suspended") {
+        return res
+          .status(403)
+          .json({ message: "Your account has been suspended." });
+      }
+
       res.status(200).json({
         _id: user._id,
         name: user.fullName,
         email: user.email,
         role: user.role,
+        status: user.status,
+        // Return new fields on login too
+        phone: user.phone,
+        address: user.address,
+        dateOfBirth: user.dateOfBirth,
         token: generateToken(user._id),
       });
     } else {
-      // User not found or password does not match
       res.status(401).json({ message: "Invalid email or password" });
     }
   } catch (error) {
@@ -77,4 +77,75 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser };
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+const updateUserStatus = async (req, res) => {
+  const { status } = req.body;
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      user.status = status;
+      const updatedUser = await user.save();
+      res.json(updatedUser);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+// --- UPDATED PROFILE CONTROLLER ---
+const updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      user.fullName = req.body.fullName || user.fullName;
+      user.email = req.body.email || user.email;
+
+      // New Fields
+      user.phone = req.body.phone || user.phone;
+      user.address = req.body.address || user.address;
+      user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+
+      if (req.body.password) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(req.body.password, salt);
+      }
+
+      const updatedUser = await user.save();
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.fullName,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        status: updatedUser.status,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        dateOfBirth: updatedUser.dateOfBirth,
+        token: generateToken(updatedUser._id),
+      });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+export {
+  registerUser,
+  loginUser,
+  getUsers,
+  updateUserStatus,
+  updateUserProfile,
+};
