@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-
 import React, { createContext, useState, useContext, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 
@@ -7,7 +6,6 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,13 +16,18 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Failed to parse user info from localStorage", error);
-
       localStorage.removeItem("userInfo");
     } finally {
-
       setLoading(false);
     }
   }, []);
+
+  // --- NEW HELPER FUNCTION ---
+  // This allows other components to update the user state without logging in again
+  const updateUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem("userInfo", JSON.stringify(userData));
+  };
 
   const signup = async (fullName, email, password, role) => {
     try {
@@ -40,7 +43,6 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data);
         return { success: true };
       }
-
       return { success: false, message: "Registration failed unexpectedly." };
     } catch (error) {
       return {
@@ -77,6 +79,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("userInfo");
     setUser(null);
   };
+
   const value = {
     user,
     isAuthenticated: !!user,
@@ -84,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
+    updateUser, // Export this!
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,12 +1,12 @@
-import React from "react";
-import { mockUsers } from "@/data/mockData";
+import React, { useState, useEffect } from "react";
+import { getAllUsers } from "@/api/userService";
 
-// Helper function for role badge colors
+// Helper for role colors
 const getRoleColor = (role) => {
-  switch (role.toLowerCase()) {
-    case "waste generator":
+  switch (role?.toLowerCase()) {
+    case "waste-generator":
       return "bg-blue-100 text-blue-800";
-    case "waste collector":
+    case "waste-collector":
       return "bg-purple-100 text-purple-800";
     case "ngo":
       return "bg-teal-100 text-teal-800";
@@ -16,6 +16,46 @@ const getRoleColor = (role) => {
 };
 
 const CommunityMembers = () => {
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const data = await getAllUsers();
+        const community = data.filter((u) => u.role !== "admin");
+        setMembers(community);
+      } catch (error) {
+        console.error("Failed to load members", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  // --- SKELETON LOADING STATE ---
+  if (loading) {
+    return (
+      <div>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Community Members
+        </h1>
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="p-6 space-y-6">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div key={n} className="flex gap-6 animate-pulse">
+                <div className="h-10 bg-gray-100 rounded w-1/3"></div>
+                <div className="h-10 bg-gray-100 rounded w-1/3"></div>
+                <div className="h-10 bg-gray-100 rounded w-1/3"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
@@ -41,37 +81,35 @@ const CommunityMembers = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {mockUsers
-              .filter((user) => user.role !== "admin")
-              .map((user) => (
-                <tr key={user.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {user.name}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleColor(
-                        user.role
-                      )}`}
-                    >
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`font-medium text-sm ${
-                        user.status === "Verified"
-                          ? "text-green-600"
-                          : "text-yellow-600"
-                      }`}
-                    >
-                      {user.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+            {members.map((user) => (
+              <tr key={user._id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">
+                    {user.fullName}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleColor(
+                      user.role
+                    )}`}
+                  >
+                    {user.role}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`font-medium text-sm ${
+                      user.status === "Verified"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    }`}
+                  >
+                    {user.status || "Pending"}
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

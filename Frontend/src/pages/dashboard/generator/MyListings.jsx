@@ -8,17 +8,15 @@ import {
 import WasteListingCard from "@/components/dashboard/WasteListingCard";
 import Modal from "@/components/common/Modal";
 import EditListingForm from "@/components/dashboard/EditListingForm";
+import toast from "react-hot-toast";
+import SkeletonCard from "@/components/common/SkeletonCard"; // --- IMPORT SKELETON ---
 
 const MyListings = () => {
   const [myListings, setMyListings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // State for managing the edit modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
 
-  // Fetch listings when the component mounts
   useEffect(() => {
     const fetchMyListings = async () => {
       try {
@@ -26,8 +24,7 @@ const MyListings = () => {
         const data = await getMyListings();
         setMyListings(data);
       } catch (error) {
-        console.error("Failed to fetch user's listings:", error);
-        setError("Could not load your listings.");
+        toast.error("Could not load your listings.", error);
       } finally {
         setLoading(false);
       }
@@ -35,20 +32,18 @@ const MyListings = () => {
     fetchMyListings();
   }, []);
 
-  // Handler for deleting a listing
   const handleDeleteListing = async (id) => {
     try {
       await deleteListing(id);
       setMyListings((currentListings) =>
         currentListings.filter((listing) => listing._id !== id)
       );
+      toast.success("Listing deleted successfully.");
     } catch (err) {
-      setError("Failed to delete listing. Please try again.");
-      console.error(err);
+      toast.error("Failed to delete listing.", err);
     }
   };
 
-  // Handlers for the edit modal
   const handleOpenEditModal = (listing) => {
     setSelectedListing(listing);
     setIsModalOpen(true);
@@ -65,15 +60,29 @@ const MyListings = () => {
       setMyListings((currentListings) =>
         currentListings.map((l) => (l._id === id ? updatedListing : l))
       );
+      toast.success("Listing updated successfully!");
       handleCloseModal();
     } catch (err) {
-      console.error("Failed to update listing:", err);
-      // You could set an error state to be displayed inside the modal here
+      toast.error("Failed to update listing.", err);
     }
   };
 
+  // --- SKELETON LOADING STATE ---
   if (loading) {
-    return <div className="text-center p-10">Loading your listings...</div>;
+    return (
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">
+            My Waste Listings
+          </h1>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <SkeletonCard key={n} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -87,12 +96,6 @@ const MyListings = () => {
           + Post New Listing
         </Link>
       </div>
-
-      {error && (
-        <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">
-          {error}
-        </div>
-      )}
 
       {myListings.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,5 +1,7 @@
-import React, { useMemo } from "react";
-import { mockUsers, mockWasteListings } from "@/data/mockData";
+import React, { useState, useEffect, useMemo } from "react";
+import { getListings } from "@/api/listingService";
+import { getAllUsers } from "@/api/userService";
+import StatCard from "@/components/dashboard/StatCard";
 import {
   BarChart,
   Bar,
@@ -11,50 +13,56 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// A reusable component for our KPI cards
-const StatCard = ({ title, value, icon }) => (
-  <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
-    <div className="bg-green-100 p-3 rounded-full">{icon}</div>
-    <div>
-      <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-2xl font-bold text-gray-800">{value}</p>
-    </div>
-  </div>
-);
-
 const AdminOverview = () => {
-  // --- Calculate KPIs from mock data ---
-  const totalUsers = mockUsers.length;
-  const totalListings = mockWasteListings.length;
-  const completedListings = mockWasteListings.filter(
-    (l) => l.status === "Completed"
+  const [listings, setListings] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [listingsData, usersData] = await Promise.all([
+          getListings(),
+          getAllUsers(),
+        ]);
+        setListings(listingsData);
+        setUsers(usersData);
+      } catch (error) {
+        console.error("Error fetching admin data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // --- FIX: Count BOTH 'Completed' and 'Claimed' ---
+  const completedListings = listings.filter(
+    (l) => l.status === "Completed" || l.status === "Claimed"
   ).length;
 
-  // --- Prepare data for the chart ---
   const chartData = useMemo(() => {
     const types = {};
-    mockWasteListings.forEach((listing) => {
-      if (types[listing.type]) {
-        types[listing.type]++;
-      } else {
-        types[listing.type] = 1;
-      }
+    listings.forEach((listing) => {
+      const type = listing.wasteType || listing.type || "Other";
+      types[type] = (types[type] || 0) + 1;
     });
     return Object.keys(types).map((type) => ({
       name: type,
       listings: types[type],
     }));
-  }, []);
+  }, [listings]);
+
+  if (loading) return <div className="p-6">Loading Admin Dashboard...</div>;
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Admin Overview</h1>
 
-      {/* KPI Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <StatCard
           title="Total Users"
-          value={totalUsers}
+          value={users.length}
           icon={
             <svg
               className="w-6 h-6 text-green-600"
@@ -73,7 +81,7 @@ const AdminOverview = () => {
         />
         <StatCard
           title="Total Listings"
-          value={totalListings}
+          value={listings.length}
           icon={
             <svg
               className="w-6 h-6 text-green-600"
@@ -85,13 +93,13 @@ const AdminOverview = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
               ></path>
             </svg>
           }
         />
         <StatCard
-          title="Completed Transactions"
+          title="Transactions (Claimed)" // Updated Title
           value={completedListings}
           icon={
             <svg
@@ -111,7 +119,6 @@ const AdminOverview = () => {
         />
       </div>
 
-      {/* Chart Section */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-bold text-gray-800 mb-4">
           Listings by Waste Type

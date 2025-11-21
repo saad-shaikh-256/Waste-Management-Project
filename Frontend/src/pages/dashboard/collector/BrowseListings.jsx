@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { getListings } from "@/api/listingService"; // Import the real API function
+import { getListings } from "@/api/listingService";
 import WasteListingCard from "@/components/dashboard/WasteListingCard";
+import SkeletonCard from "@/components/common/SkeletonCard"; // Import
 
 const BrowseListings = () => {
   const [listings, setListings] = useState([]);
@@ -8,25 +9,20 @@ const BrowseListings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [wasteTypeFilter, setWasteTypeFilter] = useState("all");
 
-  // Fetch data from the backend when the component first loads
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        setLoading(true);
         const data = await getListings();
         setListings(data);
       } catch (error) {
-        console.error("Failed to fetch listings:", error);
-        // Optionally set an error state here to show a message to the user
+        console.error("Failed to fetch listings", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchListings();
-  }, []); // The empty array ensures this effect runs only once
+  }, []);
 
-  // The filtering logic now works on the live data held in the 'listings' state
   const filteredListings = useMemo(() => {
     return listings.filter((listing) => {
       const matchesSearchTerm =
@@ -35,21 +31,12 @@ const BrowseListings = () => {
           listing.user.fullName
             .toLowerCase()
             .includes(searchTerm.toLowerCase()));
-
       const matchesWasteType =
         wasteTypeFilter === "all" ||
         listing.wasteType.toLowerCase() === wasteTypeFilter;
-
       return matchesSearchTerm && matchesWasteType;
     });
   }, [listings, searchTerm, wasteTypeFilter]);
-
-  // Show a loading indicator while fetching data
-  if (loading) {
-    return (
-      <div className="text-center p-10">Loading available listings...</div>
-    );
-  }
 
   return (
     <div>
@@ -57,7 +44,6 @@ const BrowseListings = () => {
         Browse Available Listings
       </h1>
 
-      {/* Filter and Search Controls (No changes needed here) */}
       <div className="bg-white p-4 rounded-lg shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-center">
         <div className="flex-grow w-full">
           <input
@@ -83,8 +69,14 @@ const BrowseListings = () => {
         </div>
       </div>
 
-      {/* Listings Grid - Renders based on the filtered live data */}
-      {filteredListings.length > 0 ? (
+      {/* SKELETON LOGIC */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <SkeletonCard key={n} />
+          ))}
+        </div>
+      ) : filteredListings.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredListings.map((listing) => (
             <WasteListingCard key={listing._id} listing={listing} />

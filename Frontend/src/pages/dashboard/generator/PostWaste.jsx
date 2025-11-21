@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createListing } from "@/api/listingService"; // Import the real API function
+import { createListing } from "@/api/listingService";
+import toast from "react-hot-toast"; // --- IMPORT TOAST ---
 
 const PostWaste = () => {
   const navigate = useNavigate();
 
-  // Use a single state object for the form data
   const [formData, setFormData] = useState({
     wasteType: "",
     quantity: "",
@@ -14,12 +14,9 @@ const PostWaste = () => {
     description: "",
   });
 
-  const [image, setImage] = useState(null); // Separate state for the image file
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state for the button
+  const [image, setImage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // A single handler for all text-based inputs
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,36 +25,44 @@ const PostWaste = () => {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccessMessage("");
     setIsSubmitting(true);
 
     if (!formData.wasteType || !formData.quantity || !formData.location) {
-      setError("Please fill out all required fields.");
+      toast.error("Please fill out all required fields.");
       setIsSubmitting(false);
       return;
     }
 
     try {
-      // In a real app, you would handle image uploads separately to a service like Cloudinary
-      // and get back a URL to save in the database. For now, we'll skip the image part.
-      const dataToSubmit = { ...formData };
+      const data = new FormData();
+      data.append("wasteType", formData.wasteType);
+      data.append("quantity", formData.quantity);
+      data.append("location", formData.location);
+      data.append("pickupDate", formData.pickupDate);
+      data.append("description", formData.description);
 
-      await createListing(dataToSubmit);
+      if (image) {
+        data.append("image", image);
+      }
 
-      setSuccessMessage("Waste listing posted successfully! Redirecting...");
+      await createListing(data);
 
-      // Redirect to the listings page after a short delay
+      // --- SUCCESS TOAST ---
+      toast.success("Waste listing posted successfully!");
+
       setTimeout(() => {
         navigate("/dashboard/generator/my-listings");
-      }, 2000);
+      }, 1500); // Slight delay so user reads the toast
     } catch (err) {
-      setError(
+      // --- ERROR TOAST ---
+      toast.error(
         err.response?.data?.message ||
           "Failed to post listing. Please try again."
       );
@@ -71,27 +76,9 @@ const PostWaste = () => {
         Post a New Waste Listing
       </h1>
 
-      {/* Success & Error Message Banners */}
-      {successMessage && (
-        <div
-          className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-md"
-          role="alert"
-        >
-          <p>{successMessage}</p>
-        </div>
-      )}
-      {error && (
-        <div
-          className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md"
-          role="alert"
-        >
-          <p>{error}</p>
-        </div>
-      )}
-
       <div className="bg-white p-8 rounded-xl shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Waste Type Dropdown */}
+          {/* Waste Type */}
           <div>
             <label
               htmlFor="wasteType"
@@ -117,7 +104,7 @@ const PostWaste = () => {
             </select>
           </div>
 
-          {/* Quantity and Location */}
+          {/* Quantity & Location */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
@@ -153,7 +140,7 @@ const PostWaste = () => {
             </div>
           </div>
 
-          {/* Pickup Date */}
+          {/* Date */}
           <div>
             <label
               htmlFor="pickupDate"
@@ -188,35 +175,17 @@ const PostWaste = () => {
             ></textarea>
           </div>
 
-          {/* Image Upload (UI only for now) */}
+          {/* Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Image (Optional)
             </label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-              <div className="space-y-1 text-center">
-                {/* ... SVG icon ... */}
-                <div className="flex text-sm text-gray-600">
-                  <label
-                    htmlFor="file-upload"
-                    className="relative cursor-pointer ..."
-                  >
-                    <span>Upload a file</span>
-                    <input
-                      id="file-upload"
-                      name="file-upload"
-                      type="file"
-                      className="sr-only"
-                      onChange={handleImageChange}
-                    />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
-                </div>
-                <p className="text-xs text-gray-500">
-                  {image ? image.name : "PNG, JPG up to 10MB"}
-                </p>
-              </div>
-            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg"
+            />
           </div>
 
           {/* Submit Button */}

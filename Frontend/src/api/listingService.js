@@ -1,32 +1,37 @@
 import axiosInstance from "./axiosInstance";
 
-// Function to fetch all listings from the backend
 const getListings = async () => {
   try {
     const response = await axiosInstance.get("/listings");
     return response.data;
   } catch (error) {
     console.error("Error fetching listings:", error);
-    // In a real app, you might want to handle this error more gracefully
     return [];
   }
 };
 
-// Function to create a new listing
-// This will automatically include the user's token because of our axios interceptor
+const getListingById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/listings/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching listing details:", error);
+    throw error;
+  }
+};
+
 const createListing = async (listingData) => {
   try {
     const response = await axiosInstance.post("/listings", listingData);
     return response.data;
   } catch (error) {
     console.error("Error creating listing:", error);
-    throw error; // Throw the error so the component can handle it (e.g., show an error message)
+    throw error;
   }
 };
 
 const getMyListings = async () => {
   try {
-    // The token will be sent automatically by the axios interceptor
     const response = await axiosInstance.get("/listings/mylistings");
     return response.data;
   } catch (error) {
@@ -45,7 +50,6 @@ const deleteListing = async (id) => {
   }
 };
 
-// Function to update a listing by its ID
 const updateListing = async (id, listingData) => {
   try {
     const response = await axiosInstance.put(`/listings/${id}`, listingData);
@@ -56,10 +60,36 @@ const updateListing = async (id, listingData) => {
   }
 };
 
+const placeBid = async (id, amount) => {
+  try {
+    const response = await axiosInstance.post(`/listings/${id}/bid`, {
+      amount,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error placing bid:", error);
+    throw error;
+  }
+};
+
+// --- NEW FUNCTION ---
+const markListingAsCollected = async (id) => {
+  try {
+    const response = await axiosInstance.put(`/listings/${id}/collect`, {});
+    return response.data;
+  } catch (error) {
+    console.error("Error collecting listing:", error);
+    throw error;
+  }
+};
+
 export {
   getListings,
+  getListingById,
   createListing,
   getMyListings,
   deleteListing,
   updateListing,
+  placeBid,
+  markListingAsCollected, // Exported
 };

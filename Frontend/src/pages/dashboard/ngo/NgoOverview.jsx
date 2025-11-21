@@ -1,6 +1,7 @@
-import React from "react";
-import { mockUsers, mockWasteListings } from "@/data/mockData";
-import StatCard from "@/components/dashboard/StatCard"; // Reuse the StatCard
+import React, { useState, useEffect } from "react";
+import { getListings } from "@/api/listingService";
+import { getAllUsers } from "@/api/userService";
+import StatCard from "@/components/dashboard/StatCard";
 import {
   BarChart,
   Bar,
@@ -13,22 +14,58 @@ import {
 } from "recharts";
 
 const NgoOverview = () => {
-  // Calculate KPIs relevant to an NGO
-  const totalMembers = mockUsers.length;
-  const totalListings = mockWasteListings.length;
-  const totalWeightDiverted = 550; // This would be a calculated value in a real app
+  const [stats, setStats] = useState({ members: 0, listings: 0, weight: 0 });
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Prepare data for the chart (same as admin)
-  const chartData = (() => {
-    const types = {};
-    mockWasteListings.forEach((listing) => {
-      types[listing.type] = (types[listing.type] || 0) + 1;
-    });
-    return Object.keys(types).map((type) => ({
-      name: type,
-      listings: types[type],
-    }));
-  })();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [listingsData, usersData] = await Promise.all([
+          getListings(),
+          getAllUsers(),
+        ]);
+
+        // 1. Calculate Members (excluding admins)
+        const memberCount = usersData.filter((u) => u.role !== "admin").length;
+
+        // 2. Calculate Estimated Weight
+        // Logic: Extract the first number found in the "quantity" string (e.g. "50 kg" -> 50)
+        let totalWeight = 0;
+        listingsData.forEach((l) => {
+          const match = l.quantity.match(/(\d+)/);
+          if (match) {
+            totalWeight += parseInt(match[0], 10);
+          }
+        });
+
+        // 3. Prepare Chart Data
+        const types = {};
+        listingsData.forEach((l) => {
+          const type = l.wasteType || "Other";
+          types[type] = (types[type] || 0) + 1;
+        });
+        const graphData = Object.keys(types).map((type) => ({
+          name: type,
+          listings: types[type],
+        }));
+
+        setStats({
+          members: memberCount,
+          listings: listingsData.length,
+          weight: totalWeight,
+        });
+        setChartData(graphData);
+      } catch (error) {
+        console.error("Error fetching NGO data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="p-6">Loading Impact Data...</div>;
 
   return (
     <div>
@@ -40,7 +77,7 @@ const NgoOverview = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <StatCard
           title="Total Community Members"
-          value={totalMembers}
+          value={stats.members}
           icon={
             <svg
               className="w-6 h-6 text-green-600"
@@ -59,7 +96,7 @@ const NgoOverview = () => {
         />
         <StatCard
           title="Total Listings Created"
-          value={totalListings}
+          value={stats.listings}
           icon={
             <svg
               className="w-6 h-6 text-green-600"
@@ -78,7 +115,7 @@ const NgoOverview = () => {
         />
         <StatCard
           title="Waste Diverted (Est. kg)"
-          value={`${totalWeightDiverted} kg`}
+          value={`${stats.weight} kg`}
           icon={
             <svg
               className="w-6 h-6 text-green-600"

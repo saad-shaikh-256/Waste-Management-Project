@@ -8,10 +8,12 @@ import {
 } from "@/api/listingService";
 import StatCard from "@/components/dashboard/StatCard";
 import WasteListingCard from "@/components/dashboard/WasteListingCard";
-import Modal from "@/components/common/Modal"; // Import the Modal
-import EditListingForm from "@/components/dashboard/EditListingForm"; // Import the Form
+import Modal from "@/components/common/Modal";
+import EditListingForm from "@/components/dashboard/EditListingForm";
+import toast from "react-hot-toast";
+import SkeletonCard from "@/components/common/SkeletonCard";
 
-// --- SVG Icon Components for StatCards ---
+// --- SVG Icons ---
 const ListIcon = () => (
   <svg
     className="w-6 h-6 text-green-600"
@@ -23,7 +25,7 @@ const ListIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth="2"
-      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
     ></path>
   </svg>
 );
@@ -62,9 +64,6 @@ const GeneratorOverview = () => {
   const { user } = useAuth();
   const [myListings, setMyListings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // --- NEW: State for managing the edit modal ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
 
@@ -76,7 +75,7 @@ const GeneratorOverview = () => {
         setMyListings(data);
       } catch (error) {
         console.error("Failed to fetch user's listings:", error);
-        setError("Could not load your listings.");
+        toast.error("Could not load your listings.");
       } finally {
         setLoading(false);
       }
@@ -90,13 +89,12 @@ const GeneratorOverview = () => {
       setMyListings((currentListings) =>
         currentListings.filter((listing) => listing._id !== id)
       );
+      toast.success("Listing deleted.");
     } catch (err) {
-      setError("Failed to delete listing. Please try again.");
-      console.error(err);
+      toast.error("Failed to delete listing.", err);
     }
   };
 
-  // --- NEW: Handlers for the edit modal ---
   const handleOpenEditModal = (listing) => {
     setSelectedListing(listing);
     setIsModalOpen(true);
@@ -114,16 +112,20 @@ const GeneratorOverview = () => {
         currentListings.map((l) => (l._id === id ? updatedListing : l))
       );
       handleCloseModal();
+      toast.success("Listing updated.");
     } catch (err) {
-      console.error("Failed to update listing:", err);
-      // Optionally set an error to be displayed inside the modal
+      toast.error("Failed to update.", err);
     }
   };
 
   const stats = useMemo(() => {
     const total = myListings.length;
     const available = myListings.filter((l) => l.status === "Available").length;
-    const completed = myListings.filter((l) => l.status === "Completed").length;
+    // --- CHANGED LOGIC HERE: Count both 'Completed' and 'Claimed' ---
+    const completed = myListings.filter(
+      (l) => l.status === "Completed" || l.status === "Claimed"
+    ).length;
+
     return { total, available, completed };
   }, [myListings]);
 
@@ -134,7 +136,22 @@ const GeneratorOverview = () => {
   }, [myListings]);
 
   if (loading) {
-    return <div className="text-center p-10">Loading your overview...</div>;
+    return (
+      <div className="animate-pulse">
+        <div className="h-8 bg-gray-200 rounded w-1/3 mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="h-32 bg-white rounded-lg shadow-md"></div>
+          <div className="h-32 bg-white rounded-lg shadow-md"></div>
+          <div className="h-32 bg-white rounded-lg shadow-md"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map((n) => (
+            <SkeletonCard key={n} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -158,17 +175,12 @@ const GeneratorOverview = () => {
           icon={<ActiveIcon />}
         />
         <StatCard
-          title="Completed Pickups"
+          // Updated Title to reflect that it includes Claimed items
+          title="Pickups Scheduled/Done"
           value={stats.completed}
           icon={<CompletedIcon />}
         />
       </div>
-
-      {error && (
-        <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">
-          {error}
-        </div>
-      )}
 
       <div>
         <div className="flex justify-between items-center mb-4">
@@ -188,7 +200,7 @@ const GeneratorOverview = () => {
                 key={listing._id}
                 listing={listing}
                 onDelete={handleDeleteListing}
-                onEdit={() => handleOpenEditModal(listing)} // Pass the edit handler
+                onEdit={() => handleOpenEditModal(listing)}
               />
             ))}
           </div>
@@ -208,7 +220,6 @@ const GeneratorOverview = () => {
         )}
       </div>
 
-      {/* --- NEW: Add the Modal component to the page --- */}
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
