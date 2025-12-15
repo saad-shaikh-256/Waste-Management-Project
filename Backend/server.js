@@ -34,8 +34,7 @@ app.get("/api/ping", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/listings", wasteListingRoutes);
 
-// --- MAKE UPLOADS FOLDER STATIC ---
-// This allows http://localhost:5001/uploads/image-123.jpg to work
+
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 

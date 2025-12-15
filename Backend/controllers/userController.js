@@ -63,7 +63,6 @@ const loginUser = async (req, res) => {
         email: user.email,
         role: user.role,
         status: user.status,
-        // Return new fields on login too
         phone: user.phone,
         address: user.address,
         dateOfBirth: user.dateOfBirth,
