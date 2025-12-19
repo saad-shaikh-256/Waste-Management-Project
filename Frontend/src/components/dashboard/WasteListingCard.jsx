@@ -190,7 +190,7 @@ const WasteListingCard = ({
               onClick={triggerCollectConfirm} // Use custom toast trigger
               className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition shadow-md cursor-pointer"
             >
-              Schedule Pickup
+              Pickup
             </button>
           ) : (
             <span className="text-gray-500 font-medium text-sm italic">
